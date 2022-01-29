@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from datetime import datetime
-from datetime import time as ttime
+from datetime import time as mytime
 from pymongo import MongoClient
 from pytz import timezone
 import json
@@ -87,9 +87,9 @@ def time_in_range(start, end, current):
 
 def cronjob():
 
-    start = ttime.time(12, 0) #in utc
-    end = ttime.time(23, 59)
-    current = ttime.now().time()
+    start = mytime(12, 0) #in utc
+    end = mytime(23, 59)
+    current = datetime.now().time()
 
     while True:
     
