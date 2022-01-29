@@ -87,23 +87,6 @@ def write_to_occupancy_df(current_occupancy, output_file):
     occupancy_df.to_csv(output_file, index = False, header = True)
 
 def main():
-
-    
-    # print('Choose a location:')
-    # print('1 - Woodside     2 - Jackson Heights')
-    # location = int(input())
-    
-    # while (location != 1) and (location != 2):
-    #     print('You made an invalid choice. Try again')
-    #     location = int(input())
-
-    # if (location == 1):
-
-    #     location_url = WOODSIDE_LOCATION_URL
-
-    # elif (location == 2):
-
-    #     location_url = JACKSON_HEIGHTS_URL
      
     location = sys.argv[1]
     location_url = location_url_dict.get(location)
