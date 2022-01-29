@@ -130,7 +130,7 @@ def main():
     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
     write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
 
-desired_start_time = '07:00'    
+desired_start_time = '2:20'    
 desired_end_time = '19:00'
 while True:
     if (strftime("%H:%M", localtime() >= desired_start_time) or (strftime("%H:%M", localtime() <= desired_end_time))):
