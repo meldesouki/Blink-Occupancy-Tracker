@@ -13754,3 +13754,12 @@ clean_win_occupancy_tracker_venv/Lib/site-packages/tzlocal-4.1.dist-info/RECORD
 clean_win_occupancy_tracker_venv/Lib/site-packages/tzlocal-4.1.dist-info/top_level.txt
 clean_win_occupancy_tracker_venv/Lib/site-packages/tzlocal-4.1.dist-info/WHEEL
 clean_win_occupancy_tracker_venv/Lib/site-packages/tzlocal-4.1.dist-info/zip-safe
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/__init__.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/_elementpath.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/builder.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/cssselect.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/doctestcompare.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/ElementInclude.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/pyclasslookup.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/sax.cpython-39.pyc
+win_tracker_venv/Lib/site-packages/lxml/__pycache__/usedoctest.cpython-39.pyc

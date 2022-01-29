@@ -3,11 +3,10 @@
 #### for running locally on my computer ####
 # for running locally on my computer
 # from selenium.webdriver import Edge, EdgeOptions
-# from selenium.webdriver.common.by import By
 ############################################
 
 from selenium import webdriver # for Heroku
-
+from selenium.webdriver.common.by import By
 import pandas as pd
 from datetime import datetime
 from time import localtime, strftime
@@ -30,7 +29,7 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
 ###########################################
 
 
@@ -79,6 +78,7 @@ def write_to_occupancy_db(db, current_occupancy):
     }
 
     result = db.current_occupancy.insert_one(occupancy_log_entry)
+    print(f'Entry has been logged with ID: {result.inserted_id}')
 
 
 def scrape_current_occupancy(location_url):
@@ -139,7 +139,7 @@ while True:
     if (desired_start_time <= datetime.now() <= desired_end_time ):
         main()
     
-    time.sleep(3600)    
+    time.sleep(3600) # runs every hour 
 
 # if __name__ == '__main__':
 #     main()
@@ -149,4 +149,4 @@ while True:
 #     # location = sys.argv[1]
 #     location_url = location_url_dict.get(location)
 #     current_occupancy_level = scrape_current_occupancy(location_url)
-#     write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
+    # write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
