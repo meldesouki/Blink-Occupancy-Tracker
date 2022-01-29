@@ -5210,4 +5210,5 @@ win_tracker_venv/Scripts/pip3.9.exe
 win_tracker_venv/Scripts/pip3.exe
 win_tracker_venv/Scripts/python.exe
 win_tracker_venv/Scripts/pythonw.exe
-current_occupancy.txt
+current_occupancy.csv
+config.json

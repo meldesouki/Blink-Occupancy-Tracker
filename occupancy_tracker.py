@@ -1,11 +1,12 @@
-from os import fsdecode
+import os.path
 from selenium import webdriver
-import selenium
 from selenium.webdriver import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 import pandas as pd
 from datetime import datetime
-
+from pymongo import MongoClient
+import json
+import sys
 
 options = EdgeOptions()
 options.use_chromium = True
@@ -16,11 +17,44 @@ WOODSIDE_LOCATION_URL = 'ny/queens/56-02-roosevelt-avenue'
 JACKSON_HEIGHTS_URL = 'ny/queens/78-14-roosevelt-avenue'
 BASE_URL = 'https://locations.blinkfitness.com/'
 
+location_url_dict = {
+
+    'Woodside' : 'ny/queens/56-02-roosevelt-avenue',
+    'Jackson Heights' : 'ny/queens/78-14-roosevelt-avenue'
+}
+
+def connect_to_database(config):
+    
+    with open(config) as json_config_file:
+        credentials = json.load(json_config_file)
+    
+    username = credentials.get('user')
+    password = credentials.get('password')
+
+    client = MongoClient(f'mongodb+srv://{username}:{password}@cluster0.yuctu.mongodb.net/current_occupancy?retryWrites=true&w=majority')
+    db = client.occupancy_tracker
+
+    return db
+
+def write_to_occupancy_db(db, current_occupancy):
+    
+    split_current_occupancy = current_occupancy.split(',')
+
+    occupancy_log_entry = {
+        'date' : split_current_occupancy[0],
+        'time' : split_current_occupancy[1],
+        'location': split_current_occupancy[2],
+        'occupancy': split_current_occupancy[3]
+    }
+
+    result = db.current_occupancy.insert_one(occupancy_log_entry)
+
+
 def scrape_current_occupancy(location_url):
 
     driver.get(BASE_URL + location_url)
     location = driver.find_element(By.CLASS_NAME, 'LocationName-geo').text
-    current_occupancy = driver.find_element(By.CSS_SELECTOR, 'div.Core-capacityStatus.js-capacity-status.Core-capacityStatus--green').text
+    current_occupancy = driver.find_element(By.CSS_SELECTOR, 'div.Core-capacityStatus.js-capacity-status.Core-capacityStatus').text
 
     current_date = datetime.now().date()
     current_date = current_date.strftime('%x')
@@ -38,33 +72,44 @@ def write_current_occupancy_to_file(current_occupancy, output_file):
 def write_to_occupancy_df(current_occupancy, output_file):
     
     split_current_occupancy = current_occupancy.split(',')
-    # occupancy_df = pd.DataFrame([split_current_occupancy])
+    
+    # occupancy_df = pd.DataFrame([split_current_occupancy], columns = header_ls)
     # print(occupancy_df)
-    occupancy_df = pd.read_csv(output_file)
-    occupancy_df.loc[len(occupancy_df)] = split_current_occupancy
-    occupancy_df.to_csv(output_file, index = False, header = False)
+    # occupancy_df = pd.read_csv(output_file)
+    if os.path.exists(output_file) == True:
+        occupancy_df = pd.read_csv(output_file)
+        occupancy_df.loc[len(occupancy_df)] = split_current_occupancy
+    
+    else:
+        header_ls = ['date', 'time', 'location', 'occupancy']
+        occupancy_df = pd.DataFrame([split_current_occupancy], columns = header_ls)
+    
+    occupancy_df.to_csv(output_file, index = False, header = True)
 
 def main():
 
-    print('Choose a location:')
-    print('1 - Woodside     2 - Jackson Heights')
-    location = int(input())
     
-    while (location != 1) and (location != 2):
-        print('You made an invalid choice. Try again')
-        location = int(input())
-
-    if (location == 1):
-
-        location_url = WOODSIDE_LOCATION_URL
-
-    elif (location == 2):
-
-        location_url = JACKSON_HEIGHTS_URL 
+    # print('Choose a location:')
+    # print('1 - Woodside     2 - Jackson Heights')
+    # location = int(input())
     
+    # while (location != 1) and (location != 2):
+    #     print('You made an invalid choice. Try again')
+    #     location = int(input())
+
+    # if (location == 1):
+
+    #     location_url = WOODSIDE_LOCATION_URL
+
+    # elif (location == 2):
+
+    #     location_url = JACKSON_HEIGHTS_URL
+     
+    location = sys.argv[1]
+    location_url = location_url_dict.get(location)
     current_occupancy_level = scrape_current_occupancy(location_url)
-    # write_current_occupancy_to_file(current_occupancy_level,'current_occupancy.txt')
-    write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
+    # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
+    write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
     
 
 if __name__ == '__main__':
