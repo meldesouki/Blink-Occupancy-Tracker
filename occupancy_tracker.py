@@ -1,8 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from datetime import datetime as dt
-import time
+from datetime import datetime
 from pymongo import MongoClient
 from pytz import timezone
 import json
@@ -72,24 +71,24 @@ def scrape_current_occupancy(location_url):
     location = driver.find_element(By.CLASS_NAME, 'LocationName-geo').text
     current_occupancy = driver.find_element(By.CSS_SELECTOR, 'div.Core-capacityStatus.js-capacity-status.Core-capacityStatus').text
 
-    current_date = dt.now().date()
+    current_date = datetime.now().date()
     current_date = current_date.strftime('%m/%d/%Y')
     
     est = timezone('EST')
-    current_time = dt.now().time(est)
+    current_time = datetime.now().time(est)
     current_time = current_time.strftime('%I:%M %p')
     
     return str(current_date) + ',' + str(current_time) + ','+ str(location).title() + ',' + str(current_occupancy)
 
 def time_in_range(start, end, current):
     """Returns whether current is in the range [start, end]"""
-    return start <= current <= end
+    return current >= start or current <= end
 
 def cronjob():
 
-    start = dt.time(12, 0, 0) #in utc
-    end = dt.time(23, 59, 0)
-    current = dt.now().time()
+    start = datetime.time(12, 0) #in utc
+    end = datetime.time(23, 59)
+    current = datetime.now().time()
 
     while True:
     
