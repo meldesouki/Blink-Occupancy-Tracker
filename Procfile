@@ -1,1 +1,1 @@
-worker: python occupancy_tracker.py
+clock: python clock.py

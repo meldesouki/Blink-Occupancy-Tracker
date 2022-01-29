@@ -99,14 +99,13 @@ def write_to_occupancy_df(current_occupancy, output_file):
 
 desired_start_time = datetime.strptime('07:00', '%H:%M')    
 desired_end_time = datetime.strptime('19:00', '%H:%M') 
+
+def cronjob():
+
+    while True:
+    
+        # if (desired_start_time <= datetime.now() <= desired_end_time ):
  
-while True:
-    
-    print("code should run soon")
-    
-    if (desired_start_time <= datetime.now() <= desired_end_time ):
-        
-        print("code is running")
         location = 'Woodside'
         location_url = location_url_dict.get(location)
         current_occupancy_level = scrape_current_occupancy(location_url)
@@ -116,4 +115,4 @@ while True:
         location_url = location_url_dict.get(location)
         current_occupancy_level = scrape_current_occupancy(location_url)
         write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
-        time.sleep(3600) # runs every hour 
+ 
