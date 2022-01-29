@@ -1,8 +1,3 @@
-#### for running locally on my computer ####
-# for running locally on my computer
-# from selenium.webdriver import Edge, EdgeOptions
-############################################
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -11,14 +6,8 @@ from datetime import datetime
 import time
 from pymongo import MongoClient
 import json
-import sys
 import os # for Heroku
 
-#### for running locally on my computer ####
-# options = EdgeOptions()
-# options.use_chromium = True
-
-# driver = Edge(options = options)
 ############################################
 
 ########## for Heroku######################
@@ -93,19 +82,10 @@ def scrape_current_occupancy(location_url):
     
     return str(current_date) + ',' + str(current_time) + ','+ str(location).title() + ',' + str(current_occupancy)
 
-def write_current_occupancy_to_file(current_occupancy, output_file):
-    
-    f = open(output_file, 'a')
-    f.write('\n' + current_occupancy)
-    f.close()
-
 def write_to_occupancy_df(current_occupancy, output_file):
     
     split_current_occupancy = current_occupancy.split(',')
     
-    # occupancy_df = pd.DataFrame([split_current_occupancy], columns = header_ls)
-    # print(occupancy_df)
-    # occupancy_df = pd.read_csv(output_file)
     if os.path.exists(output_file) == True:
         occupancy_df = pd.read_csv(output_file)
         occupancy_df.loc[len(occupancy_df)] = split_current_occupancy
@@ -116,28 +96,17 @@ def write_to_occupancy_df(current_occupancy, output_file):
     
     occupancy_df.to_csv(output_file, index = False, header = True)
 
-# def main():
-     
-#     location = 'Woodside'
-#     location_url = location_url_dict.get(location)
-#     current_occupancy_level = scrape_current_occupancy(location_url)
-#     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
-#     write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
-
-#     location = 'Jackson Heights'
-#     location_url = location_url_dict.get(location)
-#     current_occupancy_level = scrape_current_occupancy(location_url)
-#     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
-#     write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
-
 
 desired_start_time = datetime.strptime('07:00', '%H:%M')    
-desired_end_time = datetime.strptime('19:00', '%H:%M')  
+desired_end_time = datetime.strptime('19:00', '%H:%M') 
+ 
 while True:
     
-    # if (datetime.now() >= desired_start_time.time()) or (datetime.now() <= desired_end_time.time()):
+    print("code should run soon")
+    
     if (desired_start_time <= datetime.now() <= desired_end_time ):
-        # main()
+        
+        print("code is running")
         location = 'Woodside'
         location_url = location_url_dict.get(location)
         current_occupancy_level = scrape_current_occupancy(location_url)
@@ -148,13 +117,3 @@ while True:
         current_occupancy_level = scrape_current_occupancy(location_url)
         write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
         time.sleep(3600) # runs every hour 
-
-# if __name__ == '__main__':
-#     main()
-
-# def get_current_occupancy(location):
-
-#     # location = sys.argv[1]
-#     location_url = location_url_dict.get(location)
-#     current_occupancy_level = scrape_current_occupancy(location_url)
-    # write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
