@@ -80,15 +80,15 @@ def scrape_current_occupancy(location_url):
 
 def cronjob():
 
-    while True:
+    # while True:
  
-        location = 'Woodside'
-        location_url = location_url_dict.get(location)
-        current_occupancy_level = scrape_current_occupancy(location_url)
-        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+    location = 'Woodside'
+    location_url = location_url_dict.get(location)
+    current_occupancy_level = scrape_current_occupancy(location_url)
+    write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
 
-        location = 'Jackson Heights'
-        location_url = location_url_dict.get(location)
-        current_occupancy_level = scrape_current_occupancy(location_url)
-        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+    location = 'Jackson Heights'
+    location_url = location_url_dict.get(location)
+    current_occupancy_level = scrape_current_occupancy(location_url)
+    write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
  
