@@ -1,1 +1,1 @@
-worker: python occupancy_tracker.py 'Woodside'
+clock: python clock.py

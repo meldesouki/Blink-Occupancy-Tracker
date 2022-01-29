@@ -55,6 +55,16 @@ def connect_to_database(config):
 
     return db
 
+def connect_to_database_no_config_file():
+    
+    username = os.environ.get("MONGODB_USER")
+    password = os.environ.get("MONGODB_PASSWORD")
+
+    client = MongoClient(f'mongodb+srv://{username}:{password}@cluster0.yuctu.mongodb.net/current_occupancy?retryWrites=true&w=majority')
+    db = client.occupancy_tracker
+
+    return db
+
 def write_to_occupancy_db(db, current_occupancy):
     
     split_current_occupancy = current_occupancy.split(',')
@@ -105,14 +115,21 @@ def write_to_occupancy_df(current_occupancy, output_file):
     
     occupancy_df.to_csv(output_file, index = False, header = True)
 
-def main():
+# def main():
      
-    location = sys.argv[1]
-    location_url = location_url_dict.get(location)
-    current_occupancy_level = scrape_current_occupancy(location_url)
-    # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
-    write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
+#     location = sys.argv[1]
+#     location_url = location_url_dict.get(location)
+#     current_occupancy_level = scrape_current_occupancy(location_url)
+#     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
+#     write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
     
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
+
+def get_current_occupancy(location):
+
+    # location = sys.argv[1]
+    location_url = location_url_dict.get(location)
+    current_occupancy_level = scrape_current_occupancy(location_url)
+    write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
