@@ -1,17 +1,36 @@
-import os.path
 from selenium import webdriver
-from selenium.webdriver import Edge, EdgeOptions
-from selenium.webdriver.common.by import By
+
+#### for running locally on my computer ####
+# for running locally on my computer
+# from selenium.webdriver import Edge, EdgeOptions
+# from selenium.webdriver.common.by import By
+############################################
+
+from selenium import webdriver # for Heroku
+
 import pandas as pd
 from datetime import datetime
 from pymongo import MongoClient
 import json
 import sys
+import os # for Heroku
 
-options = EdgeOptions()
-options.use_chromium = True
+#### for running locally on my computer ####
+# options = EdgeOptions()
+# options.use_chromium = True
 
-driver = Edge(options = options)
+# driver = Edge(options = options)
+############################################
+
+########## for Heroku######################
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+###########################################
+
 
 WOODSIDE_LOCATION_URL = 'ny/queens/56-02-roosevelt-avenue'
 JACKSON_HEIGHTS_URL = 'ny/queens/78-14-roosevelt-avenue'
