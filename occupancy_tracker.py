@@ -123,13 +123,13 @@ def main():
     location_url = location_url_dict.get(location)
     current_occupancy_level = scrape_current_occupancy(location_url)
     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
-    write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
+    write_to_occupancy_db(connect_to_database(), current_occupancy_level)
 
     location = 'Jackson Heights'
     location_url = location_url_dict.get(location)
     current_occupancy_level = scrape_current_occupancy(location_url)
     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
-    write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
+    write_to_occupancy_db(connect_to_database(), current_occupancy_level)
 
 desired_start_time = datetime.strptime('02:20', '%H:%M')    
 desired_end_time = datetime.strptime('19:00', '%H:%M')  
