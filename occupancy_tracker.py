@@ -9,7 +9,6 @@ from selenium import webdriver # for Heroku
 from selenium.webdriver.common.by import By
 import pandas as pd
 from datetime import datetime
-from time import localtime, strftime
 import time
 from pymongo import MongoClient
 import json
@@ -117,29 +116,38 @@ def write_to_occupancy_df(current_occupancy, output_file):
     
     occupancy_df.to_csv(output_file, index = False, header = True)
 
-def main():
+# def main():
      
-    location = 'Woodside'
-    location_url = location_url_dict.get(location)
-    current_occupancy_level = scrape_current_occupancy(location_url)
-    # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
-    write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+#     location = 'Woodside'
+#     location_url = location_url_dict.get(location)
+#     current_occupancy_level = scrape_current_occupancy(location_url)
+#     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
+#     write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
 
-    location = 'Jackson Heights'
-    location_url = location_url_dict.get(location)
-    current_occupancy_level = scrape_current_occupancy(location_url)
-    # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
-    write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+#     location = 'Jackson Heights'
+#     location_url = location_url_dict.get(location)
+#     current_occupancy_level = scrape_current_occupancy(location_url)
+#     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
+#     write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
 
-desired_start_time = datetime.strptime('02:20', '%H:%M')    
+
+desired_start_time = datetime.strptime('07:00', '%H:%M')    
 desired_end_time = datetime.strptime('19:00', '%H:%M')  
 while True:
     
     # if (datetime.now() >= desired_start_time.time()) or (datetime.now() <= desired_end_time.time()):
     if (desired_start_time <= datetime.now() <= desired_end_time ):
-        main()
-    
-    time.sleep(3600) # runs every hour 
+        # main()
+        location = 'Woodside'
+        location_url = location_url_dict.get(location)
+        current_occupancy_level = scrape_current_occupancy(location_url)
+        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+
+        location = 'Jackson Heights'
+        location_url = location_url_dict.get(location)
+        current_occupancy_level = scrape_current_occupancy(location_url)
+        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+        time.sleep(3600) # runs every hour 
 
 # if __name__ == '__main__':
 #     main()
