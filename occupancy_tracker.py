@@ -2,7 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from datetime import datetime
+import time
 from pymongo import MongoClient
+from pytz import timezone
 import json
 import os # for Heroku
 
@@ -72,23 +74,44 @@ def scrape_current_occupancy(location_url):
 
     current_date = datetime.now().date()
     current_date = current_date.strftime('%m/%d/%Y')
-    current_time = datetime.now().time()
+    
+    est = timezone('EST')
+    current_time = datetime.now().time(est)
     current_time = current_time.strftime('%I:%M %p')
     
     return str(current_date) + ',' + str(current_time) + ','+ str(location).title() + ',' + str(current_occupancy)
 
+def time_in_range(start, end, current):
+    """Returns whether current is in the range [start, end]"""
+    return start <= current <= end
 
 def cronjob():
 
-    # while True:
- 
-    location = 'Woodside'
-    location_url = location_url_dict.get(location)
-    current_occupancy_level = scrape_current_occupancy(location_url)
-    write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+    start = datetime.time(12, 0, 0) #in utc
+    end = datetime.time(23, 59, 0)
+    current = datetime.now().time()
 
-    location = 'Jackson Heights'
-    location_url = location_url_dict.get(location)
-    current_occupancy_level = scrape_current_occupancy(location_url)
-    write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
- 
+    while True:
+    
+        if time_in_range(start, end, current):
+            
+            print('time is in range')
+            location = 'Woodside'
+            location_url = location_url_dict.get(location)
+            current_occupancy_level = scrape_current_occupancy(location_url)
+            write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+
+            location = 'Jackson Heights'
+            location_url = location_url_dict.get(location)
+            current_occupancy_level = scrape_current_occupancy(location_url)
+            write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+            time.sleep(120)
+
+        else:
+            print('time is not in range')
+
+def main():
+    cronjob()
+
+if __name__ == '__main__':
+    main()
