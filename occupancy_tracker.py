@@ -1,4 +1,4 @@
-from selenium import webdriver
+# from selenium import webdriver
 
 #### for running locally on my computer ####
 # for running locally on my computer
@@ -11,6 +11,7 @@ from selenium import webdriver # for Heroku
 import pandas as pd
 from datetime import datetime
 from time import localtime, strftime
+import time
 from pymongo import MongoClient
 import json
 import sys
@@ -130,11 +131,15 @@ def main():
     # write_to_occupancy_df(current_occupancy_level, 'current_occupancy.csv')
     write_to_occupancy_db(connect_to_database('config.json'), current_occupancy_level)
 
-desired_start_time = '2:20'    
-desired_end_time = '19:00'
+desired_start_time = datetime.strptime('02:20', '%H:%M')    
+desired_end_time = datetime.strptime('19:00', '%H:%M')  
 while True:
-    if (strftime("%H:%M", localtime() >= desired_start_time) or (strftime("%H:%M", localtime() <= desired_end_time))):
-        main()    
+    
+    # if (datetime.now() >= desired_start_time.time()) or (datetime.now() <= desired_end_time.time()):
+    if (desired_start_time <= datetime.now() <= desired_end_time ):
+        main()
+    
+    time.sleep(3600)    
 
 # if __name__ == '__main__':
 #     main()
