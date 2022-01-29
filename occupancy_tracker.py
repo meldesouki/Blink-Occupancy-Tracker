@@ -1,9 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-import pandas as pd
 from datetime import datetime
-import time
 from pymongo import MongoClient
 import json
 import os # for Heroku
@@ -20,9 +18,6 @@ chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 driver = webdriver.Chrome(service=ser, options=chrome_options)
 ###########################################
 
-
-WOODSIDE_LOCATION_URL = 'ny/queens/56-02-roosevelt-avenue'
-JACKSON_HEIGHTS_URL = 'ny/queens/78-14-roosevelt-avenue'
 BASE_URL = 'https://locations.blinkfitness.com/'
 
 location_url_dict = {
@@ -76,45 +71,24 @@ def scrape_current_occupancy(location_url):
     current_occupancy = driver.find_element(By.CSS_SELECTOR, 'div.Core-capacityStatus.js-capacity-status.Core-capacityStatus').text
 
     current_date = datetime.now().date()
-    current_date = current_date.strftime('%x')
+    current_date = current_date.strftime('%m/%d/%Y')
     current_time = datetime.now().time()
     current_time = current_time.strftime('%I:%M %p')
     
     return str(current_date) + ',' + str(current_time) + ','+ str(location).title() + ',' + str(current_occupancy)
 
-def write_to_occupancy_df(current_occupancy, output_file):
-    
-    split_current_occupancy = current_occupancy.split(',')
-    
-    if os.path.exists(output_file) == True:
-        occupancy_df = pd.read_csv(output_file)
-        occupancy_df.loc[len(occupancy_df)] = split_current_occupancy
-    
-    else:
-        header_ls = ['date', 'time', 'location', 'occupancy']
-        occupancy_df = pd.DataFrame([split_current_occupancy], columns = header_ls)
-    
-    occupancy_df.to_csv(output_file, index = False, header = True)
-
-
-desired_start_time = datetime.strptime('07:00', '%H:%M')    
-desired_end_time = datetime.strptime('19:00', '%H:%M') 
 
 def cronjob():
 
     while True:
-    
-        connect_to_database_no_config_file().current_occupancy.delete_many({"date": "01/29/22"})
-
-        # # if (desired_start_time <= datetime.now() <= desired_end_time ):
  
-        # location = 'Woodside'
-        # location_url = location_url_dict.get(location)
-        # current_occupancy_level = scrape_current_occupancy(location_url)
-        # write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+        location = 'Woodside'
+        location_url = location_url_dict.get(location)
+        current_occupancy_level = scrape_current_occupancy(location_url)
+        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
 
-        # location = 'Jackson Heights'
-        # location_url = location_url_dict.get(location)
-        # current_occupancy_level = scrape_current_occupancy(location_url)
-        # write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+        location = 'Jackson Heights'
+        location_url = location_url_dict.get(location)
+        current_occupancy_level = scrape_current_occupancy(location_url)
+        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
  
