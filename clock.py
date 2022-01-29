@@ -9,8 +9,4 @@ scheduler = BlockingScheduler()
 def chronological_job():
     cronjob()
 
-@scheduler.scheduled_job('interval', minutes=2)
-def timed_job():
-    print('This job is run every two minutes.')
-
 scheduler.start()
