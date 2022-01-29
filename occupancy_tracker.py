@@ -5,6 +5,7 @@ from datetime import datetime
 from datetime import time as mytime
 from pymongo import MongoClient
 from pytz import timezone
+import time as sleep_timer
 import json
 import os # for Heroku
 
@@ -106,7 +107,7 @@ def cronjob():
             location_url = location_url_dict.get(location)
             current_occupancy_level = scrape_current_occupancy(location_url)
             write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
-            time.sleep(120)
+            sleep_timer.sleep(120)
 
         else:
             print('time is not in range')
