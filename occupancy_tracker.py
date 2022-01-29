@@ -104,15 +104,17 @@ def cronjob():
 
     while True:
     
-        # if (desired_start_time <= datetime.now() <= desired_end_time ):
- 
-        location = 'Woodside'
-        location_url = location_url_dict.get(location)
-        current_occupancy_level = scrape_current_occupancy(location_url)
-        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+        connect_to_database_no_config_file().current_occupancy.delete_many({"date": "01/29/22"})
 
-        location = 'Jackson Heights'
-        location_url = location_url_dict.get(location)
-        current_occupancy_level = scrape_current_occupancy(location_url)
-        write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+        # # if (desired_start_time <= datetime.now() <= desired_end_time ):
+ 
+        # location = 'Woodside'
+        # location_url = location_url_dict.get(location)
+        # current_occupancy_level = scrape_current_occupancy(location_url)
+        # write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
+
+        # location = 'Jackson Heights'
+        # location_url = location_url_dict.get(location)
+        # current_occupancy_level = scrape_current_occupancy(location_url)
+        # write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
  
