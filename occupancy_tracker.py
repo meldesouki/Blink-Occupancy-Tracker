@@ -107,10 +107,11 @@ def cronjob():
             location_url = location_url_dict.get(location)
             current_occupancy_level = scrape_current_occupancy(location_url)
             write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
-            sleep_timer.sleep(120)
+            sleep_timer.sleep(3540) #59 minutes
 
         else:
             print('time is not in range')
+            sleep_timer.sleep(3540) #59 minutes
 
 def main():
     cronjob()
