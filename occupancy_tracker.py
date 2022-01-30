@@ -113,7 +113,7 @@ def cronjob():
 
         else:
             print('time is not in range')
-            ssleep_timer.sleep(1800 + ((random.randint(0, 5))*60)) #30 minutes
+            sleep_timer.sleep(1800 + ((random.randint(0, 5))*60)) #30 minutes
 
 def main():
     cronjob()
