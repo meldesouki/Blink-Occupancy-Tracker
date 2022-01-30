@@ -85,7 +85,7 @@ def scrape_current_occupancy(location_url):
 
 def time_in_range(start, end, current):
     """Returns whether current is in the range [start, end]"""
-    return current >= start or current <= end
+    return current >= start and current <= end
 
 def cronjob():
 
