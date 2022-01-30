@@ -8,6 +8,7 @@ from pytz import timezone
 import time as sleep_timer
 import json
 import os # for Heroku
+import random
 
 ############################################
 
@@ -77,7 +78,8 @@ def scrape_current_occupancy(location_url):
     current_date = current_date.strftime('%m/%d/%Y')
     
     est = timezone('US/Eastern')
-    # current_time = datetime.now().time(est)
+    # current_time = datetime.now().time()
+    current_time = datetime.now(timezone('Etc/utc')).astimezone(est))
     current_time = datetime.now(est)
     current_time = current_time.strftime('%I:%M %p')
     
@@ -91,7 +93,7 @@ def cronjob():
 
     start = mytime(12, 0) #in utc
     end = mytime(23, 59)
-    current = datetime.now().time()
+    current = datetime.now(timezone('Etc/UTC'))
 
     while True:
     
@@ -107,11 +109,11 @@ def cronjob():
             location_url = location_url_dict.get(location)
             current_occupancy_level = scrape_current_occupancy(location_url)
             write_to_occupancy_db(connect_to_database_no_config_file(), current_occupancy_level)
-            sleep_timer.sleep(1800) #30 minutes
+            sleep_timer.sleep(1800 + ((random.randint(0, 5))*60)) #30 minutes
 
         else:
             print('time is not in range')
-            sleep_timer.sleep(1800) #30 minutes
+            ssleep_timer.sleep(1800 + ((random.randint(0, 5))*60)) #30 minutes
 
 def main():
     cronjob()
