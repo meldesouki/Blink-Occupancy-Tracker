@@ -79,7 +79,8 @@ def scrape_current_occupancy(location_url):
     
     est = timezone('US/Eastern')
     # current_time = datetime.now().time()
-    current_time = datetime.now(timezone('Etc/utc').astimezone(est))
+    current_time = datetime.now(timezone('Etc/utc'))
+    current_time = current_time.astimezone(est)
     # current_time = datetime.now(est)
     current_time = current_time.strftime('%I:%M %p')
     
