@@ -93,7 +93,7 @@ def cronjob():
 
     start = mytime(12, 0) #in utc
     end = mytime(23, 59)
-    current = datetime.now(timezone('Etc/UTC'))
+    current = datetime.now(timezone('Etc/UTC')).time()
 
     while True:
     
